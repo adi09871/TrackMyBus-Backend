@@ -28,15 +28,19 @@ class DriverService(
         driverRepository.save(driver)
         return "Driver registered Sucessfully!"
     }
-    fun login (
+    fun login(
         request: DriverLoginRequest
     ): String {
-        val driver = driverRepository.findByEmail(request.email)
-        ?: return "Email is not found"
 
-        return if (driver.password != request.password) {
+        val driver = driverRepository.findByEmail(
+            request.email
+        ) ?: return "Email not found"
 
-            "login Sucessfully!"
-        } else  { "wrong password" }
-    }
-}
+        return if (
+            driver.password == request.password
+        ) {
+            "Login Successful!"
+        } else {
+            "Wrong password"
+        }
+    }}

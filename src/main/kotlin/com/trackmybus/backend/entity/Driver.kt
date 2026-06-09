@@ -19,7 +19,6 @@ data class Driver(
     @Column(unique = true)
     val email : String = "",
     val password : String = "",
-    val employeeID : String = "",
-    val licenseNumber  : String = "",
+
 
 )
