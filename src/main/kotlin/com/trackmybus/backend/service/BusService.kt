@@ -1,6 +1,7 @@
 package com.trackmybus.backend.service
 
 import com.trackmybus.backend.dto.BusCreateRequest
+import com.trackmybus.backend.dto.BusCreateResponse
 import com.trackmybus.backend.entity.Bus
 import com.trackmybus.backend.repository.BusRepository
 import org.springframework.stereotype.Service
@@ -12,14 +13,18 @@ class BusService(
 
     fun createBus(
         request: BusCreateRequest
-    ): String {
+    ): BusCreateResponse {
 
         val existingBus = busRepository.findByBusNumber(
             request.busNumber
         )
 
         if (existingBus != null) {
-            return "Bus already exists!"
+
+            return BusCreateResponse(
+                busId = existingBus.id,
+                message = "Bus already exists!"
+            )
         }
 
         val bus = Bus(
@@ -29,9 +34,12 @@ class BusService(
             driverId = request.driverId
         )
 
-        busRepository.save(bus)
+        val savedBus = busRepository.save(bus)
 
-        return "Bus Created Successfully"
+        return BusCreateResponse(
+            busId = savedBus.id,
+            message = "Bus Created Successfully"
+        )
     }
 
     fun getBusesByDriverId(
@@ -39,4 +47,5 @@ class BusService(
     ): List<Bus> {
 
         return busRepository.findAllByDriverId(driverId)
-    }}
+    }
+}
