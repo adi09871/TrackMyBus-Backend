@@ -1,6 +1,7 @@
 package com.trackmybus.backend.service
 
 import com.trackmybus.backend.dto.DriverLoginRequest
+import com.trackmybus.backend.dto.DriverLoginResponse
 import com.trackmybus.backend.dto.DriverRegisterRequest
 import com.trackmybus.backend.entity.Driver
 import com.trackmybus.backend.repository.DriverRepository
@@ -30,17 +31,26 @@ class DriverService(
     }
     fun login(
         request: DriverLoginRequest
-    ): String {
+    ): DriverLoginResponse {
 
         val driver = driverRepository.findByEmail(
             request.email
-        ) ?: return "Email not found"
+        ) ?: return DriverLoginResponse(
+            message = "Email not found",
+            driverId = -1
+        )
 
         return if (
             driver.password == request.password
         ) {
-            "Login Successful!"
+            DriverLoginResponse(
+                message = "Login Successful!",
+                driverId = driver.id
+            )
         } else {
-            "Wrong password"
+            DriverLoginResponse(
+                message = "Wrong password",
+                driverId = -1
+            )
         }
     }}

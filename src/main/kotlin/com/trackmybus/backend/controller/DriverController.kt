@@ -1,6 +1,7 @@
 package com.trackmybus.backend.controller
 
 import com.trackmybus.backend.dto.DriverLoginRequest
+import com.trackmybus.backend.dto.DriverLoginResponse
 import com.trackmybus.backend.dto.DriverRegisterRequest
 import com.trackmybus.backend.service.DriverService
 import org.springframework.web.bind.annotation.PostMapping
@@ -22,7 +23,7 @@ class DriverController (private val driverService: DriverService) {
 
     @PostMapping("/login")
     fun login   (@RequestBody request: DriverLoginRequest)
-    : String {
+    : DriverLoginResponse {
         return driverService.login(request)
     }
 }
