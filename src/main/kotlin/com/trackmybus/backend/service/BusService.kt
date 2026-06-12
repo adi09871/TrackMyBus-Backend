@@ -48,4 +48,56 @@ class BusService(
 
         return busRepository.findAllByDriverId(driverId)
     }
+
+    fun increaseOccupancy(
+        busId: Long
+    ): Bus? {
+
+        val bus = busRepository.findById(busId)
+            .orElse(null) ?: return null
+
+        if (bus.currentOccupancy < bus.seatCapacity) {
+
+            bus.currentOccupancy++
+
+            busRepository.save(bus)
+        }
+
+        return bus
+    }
+
+    fun decreaseOccupancy(
+        busId: Long
+    ): Bus? {
+
+        val bus = busRepository.findById(busId)
+            .orElse(null) ?: return null
+
+        if (bus.currentOccupancy > 0) {
+
+            bus.currentOccupancy--
+
+            busRepository.save(bus)
+        }
+
+        return bus
+    }
+
+    fun starTrip(busId: Long): Bus? {
+
+        val bus = busRepository.findById(busId).orElse(null) ?: return null
+
+bus.isTripActive = true
+        return busRepository.save(bus)
+
+    }
+
+
+    fun stopTrip(busId: Long): Bus? {
+        val bus = busRepository.findById(busId).orElse(null) ?: return null
+
+        bus.isTripActive = false
+        return busRepository.save(bus)
+    }
+
 }

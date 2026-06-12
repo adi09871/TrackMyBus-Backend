@@ -16,5 +16,8 @@ data class Bus(
 
     val routeName: String,
 
-    val driverId: Long
+    val driverId: Long,
+    var currentOccupancy: Int = 0,
+    var isTripActive: Boolean = false
+
 )

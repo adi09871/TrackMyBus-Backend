@@ -1,6 +1,5 @@
 package com.trackmybus.backend.controller
 
-
 import com.trackmybus.backend.dto.BusCreateRequest
 import com.trackmybus.backend.dto.BusCreateResponse
 import com.trackmybus.backend.entity.Bus
@@ -27,4 +26,35 @@ class BusController(
     ): List<Bus> {
 
         return busService.getBusesByDriverId(driverId)
-    }}
+    }
+
+    @PostMapping("/increase/{busId}")
+    fun increaseOccupancy(
+        @PathVariable busId: Long
+    ): Bus? {
+
+        return busService.increaseOccupancy(busId)
+    }
+
+    @PostMapping("/decrease/{busId}")
+    fun decreaseOccupancy(
+        @PathVariable busId: Long
+    ): Bus? {
+
+        return busService.decreaseOccupancy(busId)
+    }
+
+    @PostMapping("/start-trip/{busId}")
+fun startTrip(@PathVariable busId: Long): Bus? {
+
+        return busService.starTrip(busId)
+    }
+
+        @PostMapping ("/stop-trip/{busId}")
+ fun stopTrip(@PathVariable busId: Long): Bus? {
+     return busService.stopTrip(busId)
+ }
+
+
+
+}
