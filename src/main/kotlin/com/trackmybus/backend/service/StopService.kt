@@ -15,6 +15,9 @@ class StopService(
     fun savestop(
         request: SaveStopsRequest
     ): String {
+        StopRepository.deleteByBusId(
+            request.busId
+        )
         request.stops.forEachIndexed { index, stopName ->
 
             val Stop = Stop(
