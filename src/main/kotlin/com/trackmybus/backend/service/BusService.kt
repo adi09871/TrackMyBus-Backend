@@ -48,6 +48,17 @@ class BusService(
 
         return busRepository.findAllByDriverId(driverId)
     }
+    fun getAllBuses(): List<Bus> {
+
+        return busRepository.findAll()
+    }
+    fun getBusById(
+        busId: Long
+    ): Bus? {
+
+        return busRepository.findById(busId)
+            .orElse(null)
+    }
 
     fun increaseOccupancy(
         busId: Long

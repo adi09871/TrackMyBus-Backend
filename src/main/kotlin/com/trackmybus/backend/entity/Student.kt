@@ -17,5 +17,6 @@ data class Student(
 
     val password: String = "",
 
-    val collegeId: String = ""
+    val collegeId: String = "",
+    val busId: Long? = null
 )

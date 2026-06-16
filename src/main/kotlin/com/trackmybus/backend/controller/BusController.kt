@@ -54,7 +54,17 @@ fun startTrip(@PathVariable busId: Long): Bus? {
  fun stopTrip(@PathVariable busId: Long): Bus? {
      return busService.stopTrip(busId)
  }
+    @GetMapping("/{busId}")
+    fun getBusById(
+        @PathVariable busId: Long
+    ): Bus? {
 
+        return busService.getBusById(busId)
+    }
 
+    @GetMapping
+    fun getAllBuses(): List<Bus> {
 
+        return busService.getAllBuses()
+    }
 }

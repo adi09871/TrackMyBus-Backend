@@ -6,4 +6,8 @@ data class StudentRegisterRequest(
     val email: String,
     val password: String,
 
+    val collegeId: String,
+
+    val busId: Long,
+
 )

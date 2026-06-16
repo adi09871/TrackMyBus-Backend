@@ -1,6 +1,7 @@
 package com.trackmybus.backend.controller
 
 import com.trackmybus.backend.dto.StudentLoginRequest
+import com.trackmybus.backend.dto.StudentLoginResponse
 import com.trackmybus.backend.dto.StudentRegisterRequest
 import com.trackmybus.backend.service.StudentService
 import org.springframework.web.bind.annotation.PostMapping
@@ -24,7 +25,10 @@ class StudentsController(
     @PostMapping("/login")
     fun login(
         @RequestBody request: StudentLoginRequest
-    ): String {
-        return studentService.login(request)
+    ): StudentLoginResponse? {
+
+        return studentService.login(
+            request
+        )
     }
 }

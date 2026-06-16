@@ -1,6 +1,7 @@
 package com.trackmybus.backend.service
 
 import com.trackmybus.backend.dto.StudentLoginRequest
+import com.trackmybus.backend.dto.StudentLoginResponse
 import com.trackmybus.backend.dto.StudentRegisterRequest
 import com.trackmybus.backend.entity.Student
 import com.trackmybus.backend.repository.StudentRepository
@@ -23,7 +24,9 @@ class StudentService(
         val student = Student(
             name = request.name,
             email = request.email,
-            password = request.password
+            password = request.password,
+            collegeId = request.collegeId,
+            busId = request.busId
         )
 
         val savedStudent = studentRepository.save(student)
@@ -32,21 +35,35 @@ class StudentService(
 
         return "Student Registered Successfully"
     }
-fun login (
-    request: StudentLoginRequest
-): String{
-    val student = studentRepository.findByEmail(
-        request.email
-    )
-        ?: return "Email not found!"
-    return if (
-        student.password == request.password
-    )
-    {
-        "Login Successful!"
-    }
-    else {
-        "Wrong password!"
-    }}
+    fun login(
+        request: StudentLoginRequest
+    ): StudentLoginResponse? {
 
-}
+        println("LOGIN HIT")
+        println("EMAIL = ${request.email}")
+
+        val student =
+            studentRepository.findByEmail(
+                request.email
+            )
+
+        println("STUDENT = $student")
+
+        if (student == null) {
+            println("EMAIL NOT FOUND")
+            return null
+        }
+
+        if (student.password != request.password) {
+            println("PASSWORD MISMATCH")
+            return null
+        }
+
+        println("LOGIN SUCCESS")
+
+        return StudentLoginResponse(
+            id = student.id,
+            name = student.name,
+            busId = student.busId
+        )
+    }}
