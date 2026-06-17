@@ -1,15 +1,19 @@
 package com.trackmybus.backend.service
 
+import com.trackmybus.backend.dto.SaveTokenRequest
 import com.trackmybus.backend.dto.StudentLoginRequest
 import com.trackmybus.backend.dto.StudentLoginResponse
 import com.trackmybus.backend.dto.StudentRegisterRequest
 import com.trackmybus.backend.entity.Student
+import com.trackmybus.backend.entity.StudentToken
 import com.trackmybus.backend.repository.StudentRepository
+import com.trackmybus.backend.repository.StudentTokenRepository
 import org.springframework.stereotype.Service
 
 @Service
 class StudentService(
-    private val studentRepository: StudentRepository
+    private val studentRepository: StudentRepository,
+    private val studentTokenRepository: StudentTokenRepository
 ){
 
     fun register(request: StudentRegisterRequest): String {
@@ -66,4 +70,46 @@ class StudentService(
             name = student.name,
             busId = student.busId
         )
-    }}
+
+    }
+    fun saveFcmToken(
+        request: SaveTokenRequest
+    ) {
+
+        val existingToken =
+            studentTokenRepository.findByStudentId(
+                request.studentId
+            )
+
+        if (existingToken != null) {
+
+            studentTokenRepository.save(
+                existingToken.copy(
+                    fcmToken = request.fcmToken
+                )
+            )
+
+        } else {
+
+            studentTokenRepository.save(
+                StudentToken(
+                    studentId = request.studentId,
+                    fcmToken = request.fcmToken
+                )
+            )
+        }
+    }
+
+    fun getStudentToken(
+        studentId: Long
+    ): String? {
+
+        val studentToken =
+            studentTokenRepository.findByStudentId(
+                studentId
+            )
+
+        return studentToken?.fcmToken
+    }
+
+    }
