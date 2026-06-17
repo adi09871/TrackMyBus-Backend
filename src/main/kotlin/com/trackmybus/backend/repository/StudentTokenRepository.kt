@@ -10,4 +10,7 @@ interface StudentTokenRepository :
     fun findByStudentId(
         studentId: Long
     ): StudentToken?
+    fun findAllByStudentIdIn(
+        studentIds: List<Long>
+    ): List<StudentToken>
 }

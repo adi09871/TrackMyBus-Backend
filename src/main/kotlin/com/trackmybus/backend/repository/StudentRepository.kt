@@ -7,4 +7,7 @@ import org.springframework.data.repository.CrudRepository
 interface StudentRepository : JpaRepository<Student, Long> {
 
     fun findByEmail(email: String): Student?
+    fun findAllByBusId(
+        busId: Long
+    ): List<Student>
 }

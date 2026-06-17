@@ -4,16 +4,20 @@ import com.trackmybus.backend.dto.SaveTokenRequest
 import com.trackmybus.backend.dto.StudentLoginRequest
 import com.trackmybus.backend.dto.StudentLoginResponse
 import com.trackmybus.backend.dto.StudentRegisterRequest
+import com.trackmybus.backend.entity.Notification
 import com.trackmybus.backend.entity.Student
 import com.trackmybus.backend.entity.StudentToken
+import com.trackmybus.backend.repository.NotificationRepository
 import com.trackmybus.backend.repository.StudentRepository
 import com.trackmybus.backend.repository.StudentTokenRepository
 import org.springframework.stereotype.Service
-
+import com.trackmybus.backend.dto.StudentProfileResponse
 @Service
 class StudentService(
     private val studentRepository: StudentRepository,
-    private val studentTokenRepository: StudentTokenRepository
+    private val studentTokenRepository: StudentTokenRepository,
+    private val notificationRepository: NotificationRepository
+
 ){
 
     fun register(request: StudentRegisterRequest): String {
@@ -111,5 +115,32 @@ class StudentService(
 
         return studentToken?.fcmToken
     }
+    fun getNotifications(
+        studentId: Long
+    ): List<Notification> {
+
+        return notificationRepository
+            .findAllByStudentIdOrderByCreatedAtDesc(
+                studentId
+            )
+    }
+    fun getStudentProfile(
+        studentId: Long
+    ): StudentProfileResponse? {
+
+        val student =
+            studentRepository.findById(studentId)
+                .orElse(null)
+                ?: return null
+
+        return StudentProfileResponse(
+            id = student.id,
+            name = student.name,
+            email = student.email,
+            collegeId = student.collegeId,
+            busId = student.busId
+        )
+    }
+
 
     }

@@ -3,9 +3,11 @@ package com.trackmybus.backend.controller
 import com.trackmybus.backend.dto.SaveTokenRequest
 import com.trackmybus.backend.dto.StudentLoginRequest
 import com.trackmybus.backend.dto.StudentLoginResponse
+import com.trackmybus.backend.dto.StudentProfileResponse
 import com.trackmybus.backend.dto.StudentRegisterRequest
 import com.trackmybus.backend.service.NotificationService
 import com.trackmybus.backend.service.StudentService
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -69,5 +71,21 @@ class StudentsController(
         )
 
         return "Notification sent"
+    }
+    @GetMapping("/notifications/{studentId}")
+    fun getNotifications(
+        @PathVariable studentId: Long
+    ) = studentService.getNotifications(
+        studentId
+    )
+
+    @GetMapping("/{studentId}")
+    fun getStudentProfile(
+        @PathVariable studentId: Long
+    ): StudentProfileResponse? {
+
+        return studentService.getStudentProfile(
+            studentId
+        )
     }
 }

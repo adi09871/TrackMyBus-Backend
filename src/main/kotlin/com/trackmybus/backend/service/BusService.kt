@@ -4,11 +4,16 @@ import com.trackmybus.backend.dto.BusCreateRequest
 import com.trackmybus.backend.dto.BusCreateResponse
 import com.trackmybus.backend.entity.Bus
 import com.trackmybus.backend.repository.BusRepository
+import com.trackmybus.backend.repository.StudentRepository
+import com.trackmybus.backend.repository.StudentTokenRepository
 import org.springframework.stereotype.Service
 
 @Service
 class BusService(
-    private val busRepository: BusRepository
+    private val busRepository: BusRepository,
+    private val studentRepository: StudentRepository,
+    private val studentTokenRepository: StudentTokenRepository,
+    private val notificationService: NotificationService
 ) {
 
     fun createBus(
@@ -93,14 +98,52 @@ class BusService(
 
         return bus
     }
+    fun starTrip(
+        busId: Long
+    ): Bus? {
 
-    fun starTrip(busId: Long): Bus? {
+        val bus =
+            busRepository.findById(busId)
+                .orElse(null)
+                ?: return null
 
-        val bus = busRepository.findById(busId).orElse(null) ?: return null
+        bus.isTripActive = true
 
-bus.isTripActive = true
-        return busRepository.save(bus)
+        val updatedBus =
+            busRepository.save(bus)
 
+        val students =
+            studentRepository.findAllByBusId(
+                busId
+            )
+
+        val studentIds =
+            students.map {
+                it.id
+            }
+
+        val tokens =
+            studentTokenRepository
+                .findAllByStudentIdIn(
+                    studentIds
+                )
+
+        tokens.forEach { token ->
+
+            notificationService.saveNotification(
+                studentId = token.studentId,
+                title = "Trip Started",
+                message = "Bus ${bus.busNumber} has started its trip 🚍"
+            )
+
+            notificationService.sendNotification(
+                token = token.fcmToken,
+                title = "Trip Started",
+                body = "Bus ${bus.busNumber} has started its trip 🚍"
+            )
+        }
+
+        return updatedBus
     }
 
 
