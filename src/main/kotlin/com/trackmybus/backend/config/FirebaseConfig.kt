@@ -16,12 +16,9 @@ class FirebaseConfig {
         if (FirebaseApp.getApps().isNotEmpty()) {
             return
         }
-
-        val serviceAccount =
-            ClassPathResource(
-                "trackmybus-4ac67-firebase-adminsdk-fbsvc-c5160b97ac.json"
-            ).inputStream
-
+        val serviceAccount = ClassPathResource(
+            "trackmybus-4ac67-firebase-adminsdk-fbsvc-26f08eba8f.json"
+        ).inputStream
         val options =
             FirebaseOptions.builder()
                 .setCredentials(
