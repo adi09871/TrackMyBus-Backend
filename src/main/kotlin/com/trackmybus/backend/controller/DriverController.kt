@@ -2,8 +2,12 @@ package com.trackmybus.backend.controller
 
 import com.trackmybus.backend.dto.DriverLoginRequest
 import com.trackmybus.backend.dto.DriverLoginResponse
+import com.trackmybus.backend.dto.DriverProfileResponse
 import com.trackmybus.backend.dto.DriverRegisterRequest
+import com.trackmybus.backend.entity.Driver
 import com.trackmybus.backend.service.DriverService
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -25,5 +29,15 @@ class DriverController (private val driverService: DriverService) {
     fun login   (@RequestBody request: DriverLoginRequest)
     : DriverLoginResponse {
         return driverService.login(request)
+    }
+
+    @GetMapping("/{driverId}")
+    fun getDriverById(
+        @PathVariable driverId: Long
+    ): DriverProfileResponse? {
+
+        return driverService.getDriverById(
+            driverId
+        )
     }
 }

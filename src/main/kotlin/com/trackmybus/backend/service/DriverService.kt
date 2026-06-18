@@ -2,6 +2,7 @@ package com.trackmybus.backend.service
 
 import com.trackmybus.backend.dto.DriverLoginRequest
 import com.trackmybus.backend.dto.DriverLoginResponse
+import com.trackmybus.backend.dto.DriverProfileResponse
 import com.trackmybus.backend.dto.DriverRegisterRequest
 import com.trackmybus.backend.entity.Driver
 import com.trackmybus.backend.repository.DriverRepository
@@ -53,4 +54,22 @@ class DriverService(
                 driverId = -1
             )
         }
-    }}
+
+
+    }
+    fun getDriverById(
+        driverId: Long
+    ): DriverProfileResponse? {
+
+        val driver =
+            driverRepository.findById(driverId)
+                .orElse(null)
+                ?: return null
+
+        return DriverProfileResponse(
+            id = driver.id,
+            name = driver.name,
+            email = driver.email
+        )
+    }
+}
