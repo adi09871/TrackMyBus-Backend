@@ -34,9 +34,11 @@ class StudentsController(
         @RequestBody request: StudentLoginRequest
     ): StudentLoginResponse? {
 
-        return studentService.login(
-            request
-        )
+        val response = studentService.login(request)
+
+        println("RESPONSE = $response")
+
+        return response
     }
 
     @PostMapping("/save-token")
@@ -86,6 +88,14 @@ class StudentsController(
 
         return studentService.getStudentProfile(
             studentId
+        )
+    }
+    @GetMapping("/test")
+    fun test(): StudentLoginResponse {
+        return StudentLoginResponse(
+            id = 1,
+            name = "Aditya",
+            busId = 1
         )
     }
 }
