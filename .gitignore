@@ -53,3 +53,5 @@ Thumbs.db
 # Temporary Files
 *.tmp
 *.swp
+
+src/main/resources/*firebase-adminsdk*.json
