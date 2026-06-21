@@ -137,19 +137,24 @@ class BusService(
 
             tokens.forEach { token ->
 
-                println("SENDING_NOTIFICATION_TO=${token.studentId}")
+                try {
 
-                notificationService.saveNotification(
-                    studentId = token.studentId,
-                    title = "Trip Started",
-                    message = "Bus ${bus.busNumber} has started its trip 🚍"
-                )
+                    notificationService.saveNotification(
+                        studentId = token.studentId,
+                        title = "Trip Started",
+                        message = "Bus ${bus.busNumber} has started its trip 🚍"
+                    )
 
-                notificationService.sendNotification(
-                    token = token.fcmToken,
-                    title = "Trip Started",
-                    body = "Bus ${bus.busNumber} has started its trip 🚍"
-                )
+                    notificationService.sendNotification(
+                        token = token.fcmToken,
+                        title = "Trip Started",
+                        body = "Bus ${bus.busNumber} has started its trip 🚍"
+                    )
+
+                } catch (e: Exception) {
+
+                    println("FCM_FAILED=${e.message}")
+                }
             }
 
             println("START_TRIP_SUCCESS")
