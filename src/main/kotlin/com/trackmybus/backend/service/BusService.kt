@@ -98,52 +98,72 @@ class BusService(
 
         return bus
     }
-    fun starTrip(
-        busId: Long
-    ): Bus? {
+    fun starTrip(busId: Long): Bus? {
 
-        val bus =
-            busRepository.findById(busId)
-                .orElse(null)
-                ?: return null
+        try {
 
-        bus.isTripActive = true
+            println("===== START_TRIP_SERVICE_CALLED =====")
+            println("BUS_ID=$busId")
 
-        val updatedBus =
-            busRepository.save(bus)
+            val bus =
+                busRepository.findById(busId)
+                    .orElse(null)
+                    ?: run {
+                        println("BUS_NOT_FOUND")
+                        return null
+                    }
 
-        val students =
-            studentRepository.findAllByBusId(
-                busId
-            )
+            println("BUS_FOUND=$bus")
 
-        val studentIds =
-            students.map {
-                it.id
-            }
+            bus.isTripActive = true
 
-        val tokens =
-            studentTokenRepository
-                .findAllByStudentIdIn(
-                    studentIds
+            val updatedBus =
+                busRepository.save(bus)
+
+            println("TRIP_MARKED_ACTIVE")
+
+            val students =
+                studentRepository.findAllByBusId(busId)
+
+            println("STUDENT_COUNT=${students.size}")
+
+            val studentIds =
+                students.map { it.id }
+
+            val tokens =
+                studentTokenRepository.findAllByStudentIdIn(studentIds)
+
+            println("TOKEN_COUNT=${tokens.size}")
+
+            tokens.forEach { token ->
+
+                println("SENDING_NOTIFICATION_TO=${token.studentId}")
+
+                notificationService.saveNotification(
+                    studentId = token.studentId,
+                    title = "Trip Started",
+                    message = "Bus ${bus.busNumber} has started its trip 🚍"
                 )
 
-        tokens.forEach { token ->
+                notificationService.sendNotification(
+                    token = token.fcmToken,
+                    title = "Trip Started",
+                    body = "Bus ${bus.busNumber} has started its trip 🚍"
+                )
+            }
 
-            notificationService.saveNotification(
-                studentId = token.studentId,
-                title = "Trip Started",
-                message = "Bus ${bus.busNumber} has started its trip 🚍"
-            )
+            println("START_TRIP_SUCCESS")
 
-            notificationService.sendNotification(
-                token = token.fcmToken,
-                title = "Trip Started",
-                body = "Bus ${bus.busNumber} has started its trip 🚍"
-            )
+            return updatedBus
+
+        } catch (e: Exception) {
+
+            println("START_TRIP_EXCEPTION=${e.message}")
+
+            e.printStackTrace()
+
+            throw e
         }
-
-        return updatedBus
     }
 
 
